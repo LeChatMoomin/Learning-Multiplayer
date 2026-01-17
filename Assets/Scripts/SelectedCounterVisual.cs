@@ -12,7 +12,6 @@ public class SelectedCounterVisual : MonoBehaviour
 
 	private void OnPlayerSelectedCounterChanged(object sender, SelectedCounterChangedEventArgs e)
 	{
-		Debug.Log("Selection Changed!");
 		VisualsGameObject.SetActive(ClearCounter == e.SelectedCounter);
 	}
 }

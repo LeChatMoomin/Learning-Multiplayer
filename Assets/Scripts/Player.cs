@@ -6,18 +6,17 @@ public class SelectedCounterChangedEventArgs
 	public ClearCounter SelectedCounter;
 }
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
 	public static Player Instance { get; private set;}
 
-
 	public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChanged;
-
 
 	[SerializeField] private float MoveSpeed = 7f;
 	[SerializeField] private float RotationSpeed = 20f;
 	[SerializeField] private GameInput gameInput;
 	[SerializeField] private LayerMask countersMask;
+	[SerializeField] private Transform kitchenObjectHoldPoint;
 
 	private float playerRadius = .7f;
 	private float playerHeight = 2f;
@@ -26,6 +25,7 @@ public class Player : MonoBehaviour
 	private Vector3 position => transform.position;
 	private Vector3 interactDirection;
 	private ClearCounter selectedCounter;
+	private KitchenObject kitchenObject;
 	public bool IsWalking => isWalking;
 
 	private void Awake()
@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 
 	private void GameInputOnInteractAction(object sender, EventArgs e)
 	{
-		selectedCounter?.Interact();
+		selectedCounter?.Interact(this);
 	}
 
 	private void Update()
@@ -70,7 +70,6 @@ public class Player : MonoBehaviour
 		} else {
 			SetSelectedCounter(null);
 		}
-
 	}
 
 	private void HandleMovement()
@@ -117,4 +116,10 @@ public class Player : MonoBehaviour
 			}
 		);
 	}
+
+	public Transform GetObjectHoldPoint() => kitchenObjectHoldPoint;
+	public KitchenObject GetKitchenObject() => kitchenObject;
+	public void ClearKitchenObject() => kitchenObject = null;
+	public bool HasKitchenObject() => kitchenObject != null;
+	public void SetKitchenObject(KitchenObject kitchenObject) => this.kitchenObject = kitchenObject;
 }
