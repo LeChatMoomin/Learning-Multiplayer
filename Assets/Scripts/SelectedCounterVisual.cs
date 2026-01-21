@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class SelectedCounterVisual : MonoBehaviour
 {
-	[SerializeField] private ClearCounter ClearCounter;
-	[SerializeField] private GameObject VisualsGameObject;
+	[SerializeField] private BaseCounter Counter;
+	[SerializeField] private GameObject[] Visuals;
 
 	private void Start()
 	{
@@ -12,6 +12,9 @@ public class SelectedCounterVisual : MonoBehaviour
 
 	private void OnPlayerSelectedCounterChanged(object sender, SelectedCounterChangedEventArgs e)
 	{
-		VisualsGameObject.SetActive(ClearCounter == e.SelectedCounter);
+		for (int i = 0; i < Visuals.Length; i++) {
+			Visuals[i].SetActive(Counter == e.SelectedCounter);
+		}
+
 	}
 }

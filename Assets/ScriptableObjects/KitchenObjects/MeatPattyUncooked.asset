@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3478782ea0ce0af40bb7054c634233af, type: 3}
-  m_Name: CheeseBlock
+  m_Name: MeatPattyUncooked
   m_EditorClassIdentifier: Assembly-CSharp::KitchenObjectSO
-  Prefab: {fileID: 3117631891363629629, guid: 4b804970620a0044f85ff9c1a866c1f8, type: 3}
-  Icon: {fileID: 21300000, guid: da2d04fe27b94e34ea0b624569b48a6f, type: 3}
-  Name: CheeseBlock
+  Prefab: {fileID: 3117631891363629629, guid: 929cf25b77e4a53428a7f6ca2eb736b8, type: 3}
+  Icon: {fileID: 21300000, guid: aa1bacc24dde76e47b2ec0dd4e82385b, type: 3}
+  Name: MeatPattyUncooked

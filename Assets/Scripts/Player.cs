@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SelectedCounterChangedEventArgs
 {
-	public ClearCounter SelectedCounter;
+	public BaseCounter SelectedCounter;
 }
 
 public class Player : MonoBehaviour, IKitchenObjectParent
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 	private bool isWalking;
 	private Vector3 position => transform.position;
 	private Vector3 interactDirection;
-	private ClearCounter selectedCounter;
+	private BaseCounter selectedCounter;
 	private KitchenObject kitchenObject;
 	public bool IsWalking => isWalking;
 
@@ -39,6 +39,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 	private void Start()
 	{
 		gameInput.OnInteractAction += GameInputOnInteractAction;
+		gameInput.OnAlternateInteractAction += GameInputOnAlternateInteractAction;
+	}
+
+	private void GameInputOnAlternateInteractAction(object sender, EventArgs e)
+	{
+		selectedCounter?.AlternateInteract(this);
 	}
 
 	private void GameInputOnInteractAction(object sender, EventArgs e)
@@ -60,7 +66,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 			interactDirection = moveDirection;
 		}
 		if (Physics.Raycast(position, interactDirection, out var hit, interactDistance, countersMask)) {
-			if (hit.transform.TryGetComponent<ClearCounter>(out var counter)) {
+			if (hit.transform.TryGetComponent<BaseCounter>(out var counter)) {
 				if (selectedCounter != counter) {
 					SetSelectedCounter(counter);
 				}
@@ -89,12 +95,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 		if (!canMove) {
 			//Проверяем можем ли идти по диагонали
 			var moveX = new Vector3(moveDirection.x, 0, 0);
-			canMove = !Physics.CapsuleCast(position, playerHeadPosition, playerRadius, moveX, moveDistance);
+			canMove = moveDirection.x != 0 && !Physics.CapsuleCast(position, playerHeadPosition, playerRadius, moveX, moveDistance);
 			if (canMove) {
 				moveDirection = moveX.normalized;
 			} else {
 				var moveZ = new Vector3(0,0, moveDirection.z);
-				canMove = !Physics.CapsuleCast(position, playerHeadPosition, playerRadius, moveZ, moveDistance);
+				canMove = moveDirection.z != 0 && !Physics.CapsuleCast(position, playerHeadPosition, playerRadius, moveZ, moveDistance);
 				if (canMove) {
 					moveDirection = moveZ.normalized;
 				}
@@ -106,7 +112,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 		isWalking = moveDirection != Vector3.zero;
 	}
 
-	private void SetSelectedCounter(ClearCounter counter)
+	private void SetSelectedCounter(BaseCounter counter)
 	{
 		selectedCounter = counter;
 		OnSelectedCounterChanged?.Invoke(
