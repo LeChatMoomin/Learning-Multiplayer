@@ -54,7 +54,7 @@ public class StoveCounter : BaseCounter, IProgressBarOwner
 					state = State.Fried;
 					OnStateChanged?.Invoke(this, new OnStoveStateChangedEventArgs { State = State.Fried });
 					burnTimer = 0;
-					burningRecipe = GetBurnedOutputForInput(GetKitchenObject().GetKitchenObjectSO());
+					burningRecipe = GetBurnedOutputForInput(GetKitchenObject().GetScriptableObject());
 				}
 				break;
 			case State.Fried:
@@ -85,13 +85,33 @@ public class StoveCounter : BaseCounter, IProgressBarOwner
 
 	public override void Interact(Player player)
 	{
-		if (player.HasKitchenObject() && HasAnyRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) {
-			if (!HasKitchenObject()) {
+		if (player.HasKitchenObject()) {
+			if (HasKitchenObject()) {
+				if (player.GetKitchenObject().IsPlate(out var plate)) {
+					if (plate.TryAddIngredient(GetKitchenObject().GetScriptableObject())) {
+						state = State.Idle;
+						OnStateChanged?.Invoke(this, new OnStoveStateChangedEventArgs { State = State.Idle });
+						OnProgressChanged?.Invoke(
+							this,
+							new IProgressBarOwner.OnProgressChagedEventArgs {
+								ProgressNormalized = 0
+							}
+						);
+						GetKitchenObject().Destroy();
+					}
+				} else if (GetKitchenObject().IsPlate(out plate)) {
+					if (plate.TryAddIngredient(player.GetKitchenObject().GetScriptableObject())) {
+						player.GetKitchenObject().Destroy();
+					}
+				}
+			} else {
 				player.GetKitchenObject().SetParent(this);
-				fryingRecipe = GetRecipeForInput(GetKitchenObject().GetKitchenObjectSO());
-				fryingProgress = 0;
-				state = State.Frying;
-				OnStateChanged?.Invoke(this, new OnStoveStateChangedEventArgs { State = State.Frying });
+				if (HasAnyRecipeWithInput(GetKitchenObject().GetScriptableObject())) {
+					fryingRecipe = GetRecipeForInput(GetKitchenObject().GetScriptableObject());
+					fryingProgress = 0;
+					state = State.Frying;
+					OnStateChanged?.Invoke(this, new OnStoveStateChangedEventArgs { State = State.Frying });
+				}
 			}
 		} else {
 			if (HasKitchenObject()) {
@@ -106,11 +126,6 @@ public class StoveCounter : BaseCounter, IProgressBarOwner
 				);
 			}
 		}
-	}
-
-	public override void AlternateInteract(Player player)
-	{
-
 	}
 
 	private bool HasAnyRecipeWithInput(KitchenObjectSO input) => GetRecipeForInput(input) != null;

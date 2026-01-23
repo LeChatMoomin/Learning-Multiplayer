@@ -7,7 +7,7 @@ public class KitchenObject : MonoBehaviour
 
 	private IKitchenObjectParent koParent;
 
-	public KitchenObjectSO GetKitchenObjectSO() => KitchenObjectSO;
+	public KitchenObjectSO GetScriptableObject() => KitchenObjectSO;
 	public IKitchenObjectParent GetParent() => koParent;
 
 	public void SetParent(IKitchenObjectParent parent)
@@ -27,6 +27,16 @@ public class KitchenObject : MonoBehaviour
 		var result = Instantiate(objectSO.Prefab).GetComponent<KitchenObject>();
 		result.SetParent(parent);
 		return result;
+	}
+
+	public bool IsPlate(out PlateKitchenObject plate)
+	{
+		plate = null;
+		if (this is PlateKitchenObject) {
+			plate = this as PlateKitchenObject;
+			return true;
+		}
+		return false;
 	}
 
 	public void Destroy()
