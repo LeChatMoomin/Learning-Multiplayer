@@ -3,26 +3,22 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Windows;
 
-public class CuttingCounter : BaseCounter
+public class CuttingCounter : BaseCounter, IProgressBarOwner
 {
-	public class OnCuttingProgressChagedEventArgs : EventArgs
-	{
-		public float CuttingProgressNormalized;
-	}
 
 	[SerializeField] private CuttingRecipeSO[] Recipes;
 	private int cuttingProgress;
 
-	public event EventHandler<OnCuttingProgressChagedEventArgs> OnCuttingProgressChanged;
+	public event EventHandler<IProgressBarOwner.OnProgressChagedEventArgs> OnProgressChanged;
 	public event EventHandler OnCut;
 
 	public override void Interact(Player player)
 	{
 		if (!HasKitchenObject()) {
-			if (player.HasKitchenObject() /*&& HasAnyRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())*/) {
+			if (player.HasKitchenObject() && HasAnyRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) {
 				player.GetKitchenObject().SetParent(this);
 				cuttingProgress = 0;
-				OnCuttingProgressChanged?.Invoke(this, new OnCuttingProgressChagedEventArgs { CuttingProgressNormalized = 0 });
+				OnProgressChanged?.Invoke(this, new IProgressBarOwner.OnProgressChagedEventArgs { ProgressNormalized = 0 });
 			}
 		} else {
 			if (!player.HasKitchenObject()) {
@@ -38,10 +34,10 @@ public class CuttingCounter : BaseCounter
 			var recipe = GetRecipeForInput(ko.GetKitchenObjectSO());
 			if (recipe != null) {
 				cuttingProgress++;
-				OnCuttingProgressChanged?.Invoke(
+				OnProgressChanged?.Invoke(
 					this,
-					new OnCuttingProgressChagedEventArgs {
-						CuttingProgressNormalized = (float)cuttingProgress / recipe.CutsCount
+					new IProgressBarOwner.OnProgressChagedEventArgs {
+						ProgressNormalized = (float)cuttingProgress / recipe.CutsCount
 					});
 				OnCut?.Invoke(this, EventArgs.Empty);
 				if (cuttingProgress >= recipe.CutsCount) {
@@ -53,15 +49,6 @@ public class CuttingCounter : BaseCounter
 	}
 
 	private bool HasAnyRecipeWithInput(KitchenObjectSO input) => GetRecipeForInput(input) != null;
-
-	private KitchenObjectSO GetOutputForInput(KitchenObjectSO input)
-	{
-		var recipe = GetRecipeForInput(input);
-		if (recipe != null) {
-			return recipe.Output; 
-		}
-		return null;
-	}
 
 	private CuttingRecipeSO GetRecipeForInput(KitchenObjectSO input)
 	{
