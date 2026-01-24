@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3baeb3c7002aedd48922aaac0bb0d248, type: 3}
+  m_Name: MEGABurger
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeSO
+  Ingredients:
+  - {fileID: 11400000, guid: 130d98f7636e0734d9fc21ea9b03bf57, type: 2}
+  - {fileID: 11400000, guid: e45a34e62737fb64eb4c65bcda9639c4, type: 2}
+  - {fileID: 11400000, guid: 8a22febef09446c4f847f6d496153532, type: 2}
+  - {fileID: 11400000, guid: e2b7779a564883a47b9a39bb114637a4, type: 2}
+  - {fileID: 11400000, guid: bdea570bc834fd142b5e4f6b248e30c9, type: 2}
+  RecipeName: MEGABurger
