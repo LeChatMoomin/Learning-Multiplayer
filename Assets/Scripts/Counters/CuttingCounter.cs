@@ -11,6 +11,7 @@ public class CuttingCounter : BaseCounter, IProgressBarOwner
 
 	public event EventHandler<IProgressBarOwner.OnProgressChagedEventArgs> OnProgressChanged;
 	public event EventHandler OnCut;
+	public static event EventHandler OnAnyCut;
 
 	public override void Interact(Player player)
 	{
@@ -50,6 +51,7 @@ public class CuttingCounter : BaseCounter, IProgressBarOwner
 						ProgressNormalized = (float)cuttingProgress / recipe.CutsCount
 					});
 				OnCut?.Invoke(this, EventArgs.Empty);
+				OnAnyCut?.Invoke(this, EventArgs.Empty);
 				if (cuttingProgress >= recipe.CutsCount) {
 					GetKitchenObject().Destroy();
 					KitchenObject.Spawn(recipe.Output, this);

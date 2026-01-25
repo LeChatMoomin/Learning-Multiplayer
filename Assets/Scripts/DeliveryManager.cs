@@ -10,6 +10,9 @@ public class DeliveryManager : MonoBehaviour
 	public event EventHandler OnRecipeSpawned;
 	public event EventHandler OnRecipeCompleted;
 
+	public event EventHandler OnRecipeSuccess;
+	public event EventHandler OnRecipeFailed;
+
 	[SerializeField] private RecipeListSO RecipeList;
 
 	private List<DeliveryRecipeSO> WaitingList = new List<DeliveryRecipeSO>();
@@ -56,15 +59,15 @@ public class DeliveryManager : MonoBehaviour
 					}
 				}
 				if (plateContentMatchesRecipe) {
-					Debug.Log("Correct!");
+					//Есть такой рецепт в листе ожидания
 					WaitingList.Remove(waitingRecipe);
 					OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
+					OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
 					return;
 				}
 			}
 		}
-		//No matches
-		Debug.Log("Incorrect");
+		OnRecipeFailed?.Invoke(this, EventArgs.Empty);
 	}
 
 	public List<DeliveryRecipeSO> GetWaitingList() => WaitingList;
