@@ -6,6 +6,7 @@ public class DeliveryManager : MonoBehaviour
 {
 	//Singleton
 	public static DeliveryManager Instance {  get; private set; }
+	public int DeliveryScore { get; private set; }
 
 	public event EventHandler OnRecipeSpawned;
 	public event EventHandler OnRecipeCompleted;
@@ -63,6 +64,7 @@ public class DeliveryManager : MonoBehaviour
 					WaitingList.Remove(waitingRecipe);
 					OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
 					OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+					DeliveryScore++;
 					return;
 				}
 			}
