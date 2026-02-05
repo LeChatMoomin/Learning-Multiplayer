@@ -9,6 +9,11 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 
 	private KitchenObject kitchenObject;
 
+	public static void ResetStaticData()
+	{
+		OnSomethingPlaced = null;
+	}
+
 	public Transform GetObjectHoldPoint() => counterTopPoint;
 	public KitchenObject GetKitchenObject() => kitchenObject;
 	public void ClearKitchenObject() => SetKitchenObject(null);
