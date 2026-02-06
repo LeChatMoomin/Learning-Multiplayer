@@ -100,12 +100,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 		if (!canMove) {
 			//Проверяем можем ли идти по диагонали
 			var moveX = new Vector3(moveDirection.x, 0, 0);
-			canMove = moveDirection.x != 0 && !Physics.CapsuleCast(position, playerHeadPosition, playerRadius, moveX, moveDistance);
+			canMove = Mathf.Abs(moveDirection.x) > .5f && !Physics.CapsuleCast(position, playerHeadPosition, playerRadius, moveX, moveDistance);
 			if (canMove) {
 				moveDirection = moveX.normalized;
 			} else {
 				var moveZ = new Vector3(0,0, moveDirection.z);
-				canMove = moveDirection.z != 0 && !Physics.CapsuleCast(position, playerHeadPosition, playerRadius, moveZ, moveDistance);
+				canMove = Mathf.Abs(moveDirection.z) > .5f && !Physics.CapsuleCast(position, playerHeadPosition, playerRadius, moveZ, moveDistance);
 				if (canMove) {
 					moveDirection = moveZ.normalized;
 				}

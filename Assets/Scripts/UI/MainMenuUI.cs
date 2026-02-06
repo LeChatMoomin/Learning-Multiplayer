@@ -12,6 +12,11 @@ public class MainMenuUI : MonoBehaviour
 		Time.timeScale = 1.0f;
 	}
 
+	private void Start()
+	{
+		PlayButton.Select();
+	}
+
 	public void OnPlayButtonClicked()
 	{
 		Loader.LoadScene(Scene.Game);
