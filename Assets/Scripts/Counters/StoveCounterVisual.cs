@@ -5,6 +5,9 @@ public class StoveCounterVisual : MonoBehaviour
 	[SerializeField] private StoveCounter Counter;
 	[SerializeField] private GameObject stoveOnVisual;
 	[SerializeField] private GameObject particlesObject;
+	[SerializeField] private GameObject BurnWarning;
+	[SerializeField] private FlashingBarUI FlashingBarUI;
+
 
 	private void Start()
 	{
@@ -17,5 +20,10 @@ public class StoveCounterVisual : MonoBehaviour
 
 		stoveOnVisual.SetActive(isEffectsVisible);
 		particlesObject.SetActive(isEffectsVisible);
+
+		//warning если уже подгорает
+		var isBurning = e.State == StoveCounter.State.Fried;
+		BurnWarning.SetActive(isBurning);
+		FlashingBarUI.SetFlashingTrigger(isBurning);
 	}
 }

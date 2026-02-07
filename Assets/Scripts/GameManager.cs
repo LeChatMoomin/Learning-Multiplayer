@@ -21,11 +21,10 @@ public class GameManager : MonoBehaviour
 
 	private float timer;
 
-	private float startTime = 1f;
-	private float countdownToStartTime = 3f;
-	private float gamePlaingTime = 10f;
+	private float gamePlaingTime = 300f;
 
 	private bool isGamePaused = false;
+	private float countdownToStartTime = 3f;
 
 	private void Awake()
 	{
@@ -35,18 +34,21 @@ public class GameManager : MonoBehaviour
 	private void Start()
 	{
 		GameInput.Instance.OnPauseAction += OnPauseInput;
+		GameInput.Instance.OnInteractAction += OnInteractAction;
+	}
+
+	private void OnInteractAction(object sender, EventArgs e)
+	{
+		if (state == GameState.WaitingToStart) {
+			state = GameState.CountdownToStart;
+			OnStateChanged?.Invoke(this, new EventArgs());
+		}
 	}
 
 	private void Update()
 	{
 		switch (state) {
 			case GameState.WaitingToStart:
-				timer += Time.deltaTime;
-				if(timer >= startTime) {
-					timer = 0f;
-					state = GameState.CountdownToStart;
-					OnStateChanged?.Invoke(this, EventArgs.Empty);
-				}
 				break;
 			case GameState.CountdownToStart:
 				timer += Time.deltaTime;

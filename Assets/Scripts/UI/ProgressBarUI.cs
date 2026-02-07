@@ -14,12 +14,12 @@ public class ProgressBarUI : MonoBehaviour
 		if (progressOwner is null) {
 			Debug.LogError($"Game object {ProgressOwnerObject.name} does not have IProgressBarOwner component!!!!");
 		}
-		progressOwner.OnProgressChanged += OnCuttingProgressChanged;
+		progressOwner.OnProgressChanged += OnProgressChanged;
 		barImage.fillAmount = 0;
 		Hide();
 	}
 
-	private void OnCuttingProgressChanged(object sender, IProgressBarOwner.OnProgressChagedEventArgs e)
+	private void OnProgressChanged(object sender, IProgressBarOwner.OnProgressChagedEventArgs e)
 	{
 		barImage.fillAmount = e.ProgressNormalized;
 		if (e.ProgressNormalized == 0f || e.ProgressNormalized == 1f) {
